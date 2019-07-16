@@ -1,60 +1,52 @@
 package pointer.car;
 
 public class Car {
-    private String color;
-    private String brand;
-    private int tank;
-    private float fuel;
-    private float gasUsage;
-    private int totalDistance;
+    private CarModel model;
+    private View view;
 
-    public Car(String brand, String color, int tank, float gasUsage) {
-        this.brand = brand;
-        this.color = color;
-        this.tank = tank;
-        this.gasUsage = gasUsage;
-    }
-
-    public Car(String brand, String color) {
-        this(brand, color, 50, 8);
+    public Car(CarModel model, View view) {
+        this.model = model;
+        this.view = view;
     }
 
     public void drive(int km) {
         if (km <= 0) {
-            System.out.println("You have set negative or zero distance.");
+            view.showDistanceError();
             return;
         }
 
-        if (fuel == 0) {
-            System.out.println("The gas is run out. Please re-fuel the car.");
+        if (model.getFuel() == 0) {
+            view.showEmptyTankError();
             return;
         }
 
-        float distance = fuel / gasUsage * 100;
+        float distance = model.getDistance();
 
         if (km <= distance) {
-            totalDistance +=km;
-            fuel -= gasUsage * km / 100;
-            System.out.println(String.format("\nCar is driven during %1$s. Total distance is: %2$s km.", km, totalDistance));
+            model.addTotalDistance(km);
+            model.setFuel( model.getFuel() - model.getGasUsage() * km / 100 );
+
+            view.showCurrentDrive(km,  model);
         } else {
-            totalDistance += distance;
-            fuel = 0; // all fuel are used.
-            System.out.println(String.format("\nYou cannot drive full distance. Car is driven during %1$s. Total distance is: %2$s km.", distance, totalDistance));
+            model.addTotalDistance(distance);
+            model.setFuel(0); // all fuel are used.
+
+            view.showCurrentDrive(distance,  model);
         }
     }
 
     public void reFuel(int fuelVolume) {
-        fuel += fuelVolume;
+        model.setFuel(model.getFuel() + fuelVolume);
 
-        if (tank < fuel) {
-            System.out.println(String.format("The tank is full. Not all fuel are needed. Fuel left: %.2f", (fuel - tank)));
-            fuel = tank;
-        } else {
-            System.out.println(String.format("The tank has %s litters.", fuel));
+        if (model.getTank() >= model.getFuel()) {
+            view.showLitters(model);
         }
+
+        view.showLitters(model);
+        model.setFuel(model.getTank());
     }
 
     public void distance() {
-        System.out.println(String.format("\nCar brand: %1$s.\nCar color: %2$s.\nTank is %3$s.\nTotal distance: %4$s\nFuel left: %5$.2f", brand, color, tank, totalDistance, fuel));
+        view.showModel(model);
     }
 }
