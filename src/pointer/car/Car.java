@@ -4,9 +4,9 @@ public class Car {
     private String color;
     private String brand;
     private int tank;
-    private int fuel;
+    private float fuel;
     private float gasUsage;
-    private float totalDistance;
+    private int totalDistance;
 
     public Car(String brand, String color, int tank, float gasUsage) {
         this.brand = brand;
@@ -35,30 +35,26 @@ public class Car {
         if (km <= distance) {
             totalDistance +=km;
             fuel -= gasUsage * km / 100;
-            System.out.println("Car is driven during " + km + ". Total distance is: " + totalDistance + " km.");
+            System.out.println(String.format("\nCar is driven during %1$s. Total distance is: %2$s km.", km, totalDistance));
         } else {
             totalDistance += distance;
             fuel = 0; // all fuel are used.
-            System.out.println("You cannot drive full distance. Car is driven during " + distance + ". Total distance is: " + totalDistance + " km.");
+            System.out.println(String.format("\nYou cannot drive full distance. Car is driven during %1$s. Total distance is: %2$s km.", distance, totalDistance));
         }
     }
 
     public void reFuel(int fuelVolume) {
-        System.out.println("You're re-fuel with : " + fuelVolume + " litters.");
         fuel += fuelVolume;
 
         if (tank < fuel) {
-            System.out.println("The tank is full. Not all fuel are needed. Fuel left: " + (fuel - tank));
+            System.out.println(String.format("The tank is full. Not all fuel are needed. Fuel left: %.2f", (fuel - tank)));
             fuel = tank;
         } else {
-            System.out.println("The tank has " + fuel + " litters.");
+            System.out.println(String.format("The tank has %s litters.", fuel));
         }
     }
 
     public void distance() {
-        System.out.println("Car brand: ".concat(brand));
-        System.out.println("Car color: ".concat(color));
-        System.out.println("Tank is ".concat(tank);
-        System.out.println("Total distance: ".concat(totalDistance));
+        System.out.println(String.format("\nCar brand: %1$s.\nCar color: %2$s.\nTank is %3$s.\nTotal distance: %4$s\nFuel left: %5$.2f", brand, color, tank, totalDistance, fuel));
     }
 }
